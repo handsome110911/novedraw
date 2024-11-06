@@ -67,6 +67,17 @@
             z-index: 10;
         }
 
+        /* 彈窗關閉按鈕 */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
         /* 特效和樣式 */
         .text-large { font-size: 2em; }
         .text-flashing { animation: flashing 0.5s infinite alternate; color: pink; }
@@ -87,6 +98,18 @@
         }
 
         .container { text-align: center; color: white; position: relative; z-index: 1; }
+
+        /* 按鈕樣式 */
+        button, input[type="checkbox"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
@@ -104,10 +127,11 @@
     </div>
 
     <!-- 再來一次計數 -->
-    <div class="counter">再來一次次數：<span id="retryCounter">0</span></div>
+    <div class="counter">再來一次次數：<span id="retryCounter">0</span> <button onclick="resetRetryCounter()">重置</button></div>
 
     <!-- 彈窗 -->
     <div id="popup" class="popup">
+        <button class="close-button" onclick="hidePopup()">×</button>
         <img id="popupImage" src="" alt="結果圖片" style="width: 100px; height: 100px;">
         <div id="popupText" class="text-large"></div>
     </div>
@@ -120,6 +144,12 @@
         </div>
         <button id="singleDrawButton" onclick="singleDraw()">抽獎一次</button>
         <button id="tenDrawButton" onclick="startDraw(10)">開始抽獎十次</button>
+        <div>
+            <label>
+                <input type="checkbox" id="disablePopupCheckbox">
+                禁用彈框
+            </label>
+        </div>
         <div id="resultsContainer"></div>
         <button class="hidden" id="drawAgainButton" onclick="singleDraw(true)">原本名稱再抽一次</button>
         <button class="hidden" id="drawTenAgainButton" onclick="startDraw(10, true)">再來十次</button>
@@ -161,7 +191,7 @@
                     resultDiv.classList.add("special-winner");
                     updateLeaderboard(currentUsername, result);
                 }
-                if (index === totalResults - 1) {
+                if (index === totalResults - 1 && !document.getElementById("disablePopupCheckbox").checked) {
                     showPopup(result);
                 }
             }, index * 300);

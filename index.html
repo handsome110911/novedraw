@@ -113,6 +113,16 @@
             border-radius: 5px;
             margin: 5px;
         }
+
+        /* 結果淡入動畫 */
+        .result {
+            opacity: 0;
+            transition: opacity 3s ease-in;
+        }
+
+        .result.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -186,6 +196,7 @@
             resultDiv.classList.add("result");
             resultDiv.innerHTML = `<strong>${currentUsername} 的第 ${index + 1} 次抽獎結果：</strong> ${result}`;
 
+            // 設置5秒等待後開始顯示
             setTimeout(() => {
                 resultDiv.classList.add("visible");
 
@@ -194,11 +205,12 @@
                     updateLeaderboard(currentUsername, result);
                 }
 
+                // 彈窗顯示最後一個抽獎結果
                 if (index === totalResults - 1 && !document.getElementById("disablePopupCheckbox").checked) {
                     clearTimeout(lastResultTimeout);
-                    lastResultTimeout = setTimeout(() => showPopup(result), 300);
+                    lastResultTimeout = setTimeout(() => showPopup(result), 3000);
                 }
-            }, index * 300);
+            }, 5000 + index * 300); // 5秒等待 + 每次抽獎的延遲
 
             document.getElementById('resultsContainer').appendChild(resultDiv);
         }
@@ -262,13 +274,14 @@
                 displayResult(result, index, results.length);
             });
 
+            // 按鈕在抽獎結果顯示完成後才顯示
             document.getElementById('drawAgainButton').classList.add('hidden');
             document.getElementById('drawTenAgainButton').classList.add('hidden');
 
             setTimeout(() => {
                 document.getElementById('drawAgainButton').classList.remove('hidden');
                 document.getElementById('drawTenAgainButton').classList.remove('hidden');
-            }, times * 300);
+            }, 5000 + times * 300); // 5秒等待 + 所有抽獎顯示完成
         }
 
         function singleDraw(useCurrentName = false) {

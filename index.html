@@ -59,10 +59,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
+            width: 80%;
+            max-width: 500px;
             display: none;
             z-index: 10;
         }
@@ -80,12 +82,16 @@
         }
 
         /* 特效和樣式 */
-        .text-large { font-size: 2em; }
-        .text-flashing { animation: flashing 0.5s infinite alternate; color: pink; }
-        .text-outline { text-shadow: -1px -1px 2px #fff, 1px 1px 2px #fff; }
-        .text-yellow { color: yellow; }
-        .text-blue { color: blue; }
-        .text-expand { animation: expand 0.5s infinite alternate; }
+        .text-large { font-size: 2.5em; }
+        .text-flashing {
+            animation: flashing 0.8s infinite alternate;
+            color: #FF69B4; /* 粉色 */
+            text-shadow: 0 0 8px #00BFFF; /* 藍色陰影 */
+        }
+        .text-expand {
+            color: yellow;
+            animation: expand 0.8s infinite alternate;
+        }
 
         @keyframes flashing { 0% { opacity: 1; } 100% { opacity: 0.7; } }
         @keyframes expand { 0% { transform: scale(1); } 100% { transform: scale(1.2); } }
@@ -150,7 +156,7 @@
     <!-- 彈窗 -->
     <div id="popup" class="popup">
         <button class="close-button" onclick="hidePopup()">×</button>
-        <img id="popupImage" src="" alt="結果圖片" style="width: 100px; height: 100px;">
+        <img id="popupImage" src="" alt="結果圖片" style="width: 80%; max-height: 200px;">
         <div id="popupText" class="text-large"></div>
     </div>
 
@@ -230,11 +236,11 @@
             } else if (result.includes("大獎")) {
                 popupImage.src = "novenice.png";
                 popupText.innerText = result;
-                popupText.classList.add("text-flashing", "text-outline", "text-blue");
+                popupText.classList.add("text-flashing");
             } else if (result === "BAN600") {
                 popupImage.src = "nove88.png";
                 popupText.innerText = "10分鐘後見";
-                popupText.classList.add("text-yellow", "text-outline", "text-expand");
+                popupText.classList.add("text-expand");
             }
 
             popup.style.display = "block";

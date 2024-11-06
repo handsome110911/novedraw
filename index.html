@@ -141,6 +141,10 @@
 
     <!-- 抽獎區域 -->
     <div class="container">
+        <label>
+            <input type="checkbox" id="disablePopupCheckbox">
+            禁用彈框
+        </label>
         <h1>諾芙新人畢業紀念周邊抽獎</h1>
         <div class="input-container">
             <input type="text" id="username" placeholder="請輸入您的名稱">
@@ -150,10 +154,6 @@
         <div id="resultsContainer"></div>
         <button class="hidden" id="drawAgainButton" onclick="singleDraw(true)">原本名稱再抽一次</button>
         <button class="hidden" id="drawTenAgainButton" onclick="startDraw(10, true)">再來十次</button>
-        <label>
-            <input type="checkbox" id="disablePopupCheckbox">
-            禁用彈框
-        </label>
     </div>
 
     <script>
@@ -262,8 +262,13 @@
                 displayResult(result, index, results.length);
             });
 
-            document.getElementById('drawAgainButton').classList.remove('hidden');
-            document.getElementById('drawTenAgainButton').classList.remove('hidden');
+            document.getElementById('drawAgainButton').classList.add('hidden');
+            document.getElementById('drawTenAgainButton').classList.add('hidden');
+
+            setTimeout(() => {
+                document.getElementById('drawAgainButton').classList.remove('hidden');
+                document.getElementById('drawTenAgainButton').classList.remove('hidden');
+            }, times * 300);
         }
 
         function singleDraw(useCurrentName = false) {

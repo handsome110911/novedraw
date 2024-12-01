@@ -15,6 +15,7 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            background-color: #0A1128; /* 深藍背景 */
         }
 
         .background-image {
@@ -38,13 +39,16 @@
             z-index: -1;
         }
 
-        /* 黑色文字外框白字樣式 */
+        /* 文字外框樣式 (參考圖片，但黑框白字) */
         h1, h2, p, div.result {
-            color: black;
-            background-color: white;
-            padding: 5px;
-            border: 2px solid black;
-            border-radius: 5px;
+            color: white;
+            background-color: black;
+            padding: 5px 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 15px;
+            border: 5px solid black; /* 外框 */
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6); /* 類似陰影效果 */
             text-align: center;
         }
 
@@ -53,8 +57,6 @@
             top: 10%;
             text-align: center;
             width: 100%;
-            font-size: 2em;
-            font-weight: bold;
             z-index: 1;
         }
 
@@ -84,7 +86,7 @@
 
         .leaderboard ul li {
             margin-bottom: 5px;
-            font-size: 0.9em;
+            font-size: 1rem;
         }
 
         .leaderboard button {
@@ -106,7 +108,7 @@
 
         .retry-counter h2 {
             margin: 0 0 10px;
-            font-size: 1em;
+            font-size: 1rem;
         }
 
         /* 抽獎區域布局調整 */
@@ -121,7 +123,7 @@
         input[type="text"] {
             margin-bottom: 10px;
             padding: 10px;
-            font-size: 1em;
+            font-size: 1rem;
             border-radius: 5px;
             border: 2px solid black;
             text-align: center;
@@ -130,7 +132,7 @@
         /* 統一按鈕樣式 */
         button {
             padding: 10px 20px;
-            font-size: 1em;
+            font-size: 1rem;
             cursor: pointer;
             background-color: #4CAF50;
             color: white;
@@ -148,8 +150,7 @@
         /* 抽獎結果特效 */
         .result {
             margin-top: 10px;
-            font-size: 18px;
-            text-shadow: 1px 1px 2px black;
+            font-size: 1.5rem;
             opacity: 0;
             transition: opacity 0.5s ease-in;
         }
@@ -158,14 +159,14 @@
             opacity: 1;
         }
 
-        /* 特效：最後一抽幸運特效 */
-        .lucky {
-            animation: luckyFlash 0.2s alternate;
+        /* 特效：中獎特效 */
+        .special-winner {
+            animation: glow 1s infinite alternate;
         }
 
-        @keyframes luckyFlash {
-            0% { background-color: pink; transform: scale(1.1); }
-            100% { background-color: white; transform: scale(1); }
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #ff9, 0 0 20px #ff6; }
+            100% { text-shadow: 0 0 10px #ff9, 0 0 20px #ff6, 0 0 30px #ff3; }
         }
     </style>
 </head>
@@ -237,39 +238,19 @@
             const resultsContainer = document.getElementById("resultsContainer");
             resultsContainer.innerHTML = ""; // 清空結果
 
-            let results = [];
             for (let i = 0; i < times; i++) {
-                results.push(getPrize());
-            }
-
-            results.forEach((prize, index) => {
+                const prize = getPrize();
                 const resultElement = document.createElement("div");
                 resultElement.className = "result";
-                resultElement.textContent = `${username} 的第 ${index + 1} 次抽獎結果：${prize}`;
+                resultElement.textContent = `${username} 的第 ${i + 1} 次抽獎結果：${prize}`;
 
-                if (prize === "再來一次") {
-                    retryCount++;
-                    updateRetryCounter();
+                if (prize.includes("大獎")) {
+                    resultElement.classList.add("special-winner");
                 }
 
-                if (index === results.length - 1 && prize === "哈哈 沒抽到" && Math.random() < 0.05) {
-                    resultElement.classList.add("lucky");
-                    setTimeout(() => resultElement.classList.remove("lucky"), 200);
-                }
-
-                setTimeout(() => resultElement.classList.add("visible"), index * 300);
+                setTimeout(() => resultElement.classList.add("visible"), i * 300);
                 resultsContainer.appendChild(resultElement);
-            });
-        }
-
-        function updateLeaderboard() {
-            const leaderboardList = document.getElementById("leaderboardList");
-            leaderboardList.innerHTML = "";
-            leaderboard.forEach(entry => {
-                const listItem = document.createElement("li");
-                listItem.textContent = entry;
-                leaderboardList.appendChild(listItem);
-            });
+            }
         }
 
         function resetLeaderboard() {

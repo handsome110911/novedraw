@@ -38,6 +38,15 @@
             z-index: -1;
         }
 
+        /* 標題和文本設計為黑框白字 */
+        h1, h2, p, div.result {
+            color: white;
+            background-color: black;
+            padding: 5px;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+
         /* 榜單樣式 */
         .leaderboard {
             position: absolute;
@@ -48,6 +57,19 @@
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaderboard ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .leaderboard ul li {
+            margin-bottom: 5px;
+            font-size: 0.9em;
         }
 
         /* 再來一次計數器樣式 */
@@ -68,13 +90,8 @@
             font-size: 1em;
         }
 
-        .retry-counter p {
-            margin: 5px 0;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .retry-counter button {
+        /* 統一按鈕樣式 */
+        button {
             padding: 5px 10px;
             font-size: 0.9em;
             cursor: pointer;
@@ -82,9 +99,58 @@
             color: white;
             border: none;
             border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
         }
 
-        /* 其他樣式保持不變 */
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* 恢復抽獎特效 */
+        .result {
+            margin-top: 10px;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px black;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+
+        .result.visible {
+            opacity: 1;
+        }
+
+        .special-winner {
+            color: #00aaff;
+            animation: specialFlash 0.5s infinite alternate;
+        }
+
+        @keyframes specialFlash {
+            0% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        .retry {
+            color: white;
+            background-color: black;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .ban600 {
+            color: yellow;
+            font-size: 2em;
+            border: 2px solid black;
+            padding: 5px 10px;
+            animation: zoomInOut 0.5s infinite alternate;
+            border-radius: 5px;
+        }
+
+        @keyframes zoomInOut {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
     </style>
 </head>
 <body>
@@ -156,6 +222,7 @@
             for (let i = 0; i < times; i++) {
                 const prize = getPrize();
                 const resultElement = document.createElement("div");
+                resultElement.className = "result";
                 resultElement.textContent = `${username} 的第 ${i + 1} 次抽獎結果：${prize}`;
 
                 if (prize === "再來一次") {
@@ -166,8 +233,10 @@
                 if (prize.includes("大獎")) {
                     leaderboard.push(`${username}: ${prize}`);
                     updateLeaderboard();
+                    resultElement.classList.add("special-winner");
                 }
 
+                setTimeout(() => resultElement.classList.add("visible"), i * 300);
                 resultsContainer.appendChild(resultElement);
             }
         }

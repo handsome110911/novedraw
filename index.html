@@ -45,6 +45,7 @@
             padding: 5px;
             border: 2px solid black;
             border-radius: 5px;
+            text-align: center;
         }
 
         /* 榜單樣式 */
@@ -57,6 +58,10 @@
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .leaderboard ul {
@@ -70,6 +75,10 @@
         .leaderboard ul li {
             margin-bottom: 5px;
             font-size: 0.9em;
+        }
+
+        .leaderboard button {
+            margin-top: 10px;
         }
 
         /* 再來一次計數器樣式 */
@@ -107,7 +116,7 @@
             background-color: #45a049;
         }
 
-        /* 恢復抽獎特效 */
+        /* 抽獎結果特效 */
         .result {
             margin-top: 10px;
             font-size: 18px;
@@ -120,36 +129,41 @@
             opacity: 1;
         }
 
+        /* 特效：大獎 */
         .special-winner {
-            color: #00aaff;
-            animation: specialFlash 0.5s infinite alternate;
+            color: pink;
+            animation: glowPink 1s infinite alternate;
         }
 
-        @keyframes specialFlash {
-            0% { opacity: 1; }
-            100% { opacity: 0.7; }
+        @keyframes glowPink {
+            0% { text-shadow: 0 0 5px #ff80ff, 0 0 10px #ff40ff, 0 0 20px #ff00ff; }
+            100% { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff80ff, 0 0 30px #ff40ff; }
         }
 
+        /* 特效：再來一次 */
         .retry {
-            color: white;
-            background-color: black;
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: inline-block;
+            color: blue;
+            animation: glowBlue 1s infinite alternate;
         }
 
+        @keyframes glowBlue {
+            0% { text-shadow: 0 0 5px #80d4ff, 0 0 10px #40aaff, 0 0 20px #007fff; }
+            100% { text-shadow: 0 0 10px #007fff, 0 0 20px #80d4ff, 0 0 30px #40aaff; }
+        }
+
+        /* 特效：BAN600 */
         .ban600 {
             color: yellow;
             font-size: 2em;
             border: 2px solid black;
             padding: 5px 10px;
-            animation: zoomInOut 0.5s infinite alternate;
+            animation: glowYellow 1s infinite alternate;
             border-radius: 5px;
         }
 
-        @keyframes zoomInOut {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2); }
+        @keyframes glowYellow {
+            0% { text-shadow: 0 0 5px #ffff80, 0 0 10px #ffff40, 0 0 20px #ffff00; }
+            100% { text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff80, 0 0 30px #ffff40; }
         }
     </style>
 </head>
@@ -228,12 +242,17 @@
                 if (prize === "再來一次") {
                     retryCount++;
                     updateRetryCounter();
+                    resultElement.classList.add("retry");
                 }
 
                 if (prize.includes("大獎")) {
                     leaderboard.push(`${username}: ${prize}`);
                     updateLeaderboard();
                     resultElement.classList.add("special-winner");
+                }
+
+                if (prize === "BAN600") {
+                    resultElement.classList.add("ban600");
                 }
 
                 setTimeout(() => resultElement.classList.add("visible"), i * 300);

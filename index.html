@@ -159,32 +159,52 @@
         .result.visible {
             opacity: 1;
         }
+
+        /* 特效：大獎 */
+        .special-winner {
+            animation: glowPink 1s infinite alternate;
+            color: #FF69B4; /* 粉色 */
+        }
+
+        @keyframes glowPink {
+            0% { text-shadow: 0 0 5px #FF80FF, 0 0 10px #FF40FF, 0 0 20px #FF00FF; }
+            100% { text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF80FF, 0 0 30px #FF40FF; }
+        }
+
+        /* 特效：再來一次 */
+        .retry {
+            animation: glowBlue 1s infinite alternate;
+            color: #1E90FF; /* 藍色 */
+        }
+
+        @keyframes glowBlue {
+            0% { text-shadow: 0 0 5px #80D4FF, 0 0 10px #40AAFF, 0 0 20px #007FFF; }
+            100% { text-shadow: 0 0 10px #007FFF, 0 0 20px #80D4FF, 0 0 30px #40AAFF; }
+        }
+
+        /* 特效：BAN600 */
+        .ban600 {
+            animation: glowYellow 1s infinite alternate;
+            color: yellow; /* 黃色 */
+        }
+
+        @keyframes glowYellow {
+            0% { text-shadow: 0 0 5px #FFFF80, 0 0 10px #FFFF40, 0 0 20px #FFFF00; }
+            100% { text-shadow: 0 0 10px #FFFF00, 0 0 20px #FFFF80, 0 0 30px #FFFF40; }
+        }
     </style>
 </head>
 <body>
-    <!-- 背景層 -->
-    <div class="background-image"></div>
-    <div class="background-overlay"></div>
-
-    <!-- 標題 -->
     <h1>諾芙新人畢業紀念周邊抽獎</h1>
-
-    <!-- 榜單 -->
     <div class="leaderboard">
         <h2>大獎榜單</h2>
         <ul id="leaderboardList"></ul>
         <button onclick="resetLeaderboard()">重置榜單</button>
-        <button onclick="copyLeaderboard()">複製榜單</button>
     </div>
-
-    <!-- 再來一次計數器 -->
     <div class="retry-counter">
         <h2>再來一次計數器</h2>
         <p id="retryCount">0</p>
-        <button onclick="resetRetryCounter()">清空計數</button>
     </div>
-
-    <!-- 抽獎區域 -->
     <div class="container">
         <input type="text" id="username" placeholder="請輸入您的名稱">
         <button onclick="drawPrize(1)">抽獎一次</button>
@@ -193,31 +213,7 @@
     </div>
 
     <script>
-        let leaderboard = [];
         let retryCount = 0;
-
-        const prizes = [
-            { name: "大獎 - 立牌（雙馬尾）", chance: 0.3 },
-            { name: "大獎 - 立牌（長髮）", chance: 0.3 },
-            { name: "大獎 - 飯友（雙馬尾）", chance: 0.1 },
-            { name: "大獎 - 飯友（長髮）", chance: 0.1 },
-            { name: "大獎 - 貼紙", chance: 0.2 },
-            { name: "哈哈 沒抽到", chance: 88 },
-            { name: "再來一次", chance: 5 },
-            { name: "BAN600", chance: 5 },
-        ];
-
-        function getPrize() {
-            let rand = Math.random() * 100;
-            let cumulativeChance = 0;
-
-            for (let prize of prizes) {
-                cumulativeChance += prize.chance;
-                if (rand < cumulativeChance) {
-                    return prize.name;
-                }
-            }
-        }
 
         function drawPrize(times) {
             const username = document.getElementById("username").value.trim();
@@ -227,31 +223,61 @@
             }
 
             const resultsContainer = document.getElementById("resultsContainer");
-            resultsContainer.innerHTML = ""; // 清空結果
+            resultsContainer.innerHTML = "";
 
-            for (let i = 0; i < times; i++) {
+            let index = 0;
+
+            const interval = setInterval(() => {
+                if (index >= times) {
+                    clearInterval(interval);
+                    return;
+                }
+
                 const prize = getPrize();
                 const resultElement = document.createElement("div");
                 resultElement.className = "result";
-                resultElement.textContent = `${username} 的第 ${i + 1} 次抽獎結果：${prize}`;
+                resultElement.textContent = `${username} 的第 ${index + 1} 次抽獎結果：${prize}`;
 
                 if (prize.includes("大獎")) {
+                    resultElement.classList.add("special-winner");
                     updateLeaderboard(username, prize);
                 } else if (prize === "再來一次") {
+                    resultElement.classList.add("retry");
                     retryCount++;
                     updateRetryCounter();
+                } else if (prize === "BAN600") {
+                    resultElement.classList.add("ban600");
                 }
 
-                setTimeout(() => resultElement.classList.add("visible"), i * 300);
                 resultsContainer.appendChild(resultElement);
+                setTimeout(() => resultElement.classList.add("visible"), 100);
+                index++;
+            }, 500);
+        }
+
+        function getPrize() {
+            const prizes = [
+                { name: "大獎 - 立牌（雙馬尾）", chance: 1 },
+                { name: "大獎 - 立牌（長髮）", chance: 1 },
+                { name: "再來一次", chance: 10 },
+                { name: "BAN600", chance: 5 },
+                { name: "哈哈 沒抽到", chance: 83 }
+            ];
+
+            const rand = Math.random() * 100;
+            let cumulative = 0;
+
+            for (const prize of prizes) {
+                cumulative += prize.chance;
+                if (rand <= cumulative) return prize.name;
             }
         }
 
-        function updateLeaderboard(name, prize) {
+        function updateLeaderboard(username, prize) {
             const leaderboardList = document.getElementById("leaderboardList");
-            const listItem = document.createElement("li");
-            listItem.textContent = `${name}: ${prize}`;
-            leaderboardList.appendChild(listItem);
+            const item = document.createElement("li");
+            item.textContent = `${username}: ${prize}`;
+            leaderboardList.appendChild(item);
         }
 
         function updateRetryCounter() {
@@ -259,19 +285,8 @@
         }
 
         function resetLeaderboard() {
-            document.getElementById("leaderboardList").innerHTML = "";
-        }
-
-        function copyLeaderboard() {
-            const text = Array.from(document.getElementById("leaderboardList").children)
-                .map(item => item.textContent)
-                .join("\n");
-            navigator.clipboard.writeText(text).then(() => alert("榜單已複製！"));
-        }
-
-        function resetRetryCounter() {
-            retryCount = 0;
-            updateRetryCounter();
+            const leaderboardList = document.getElementById("leaderboardList");
+            leaderboardList.innerHTML = "";
         }
     </script>
 </body>

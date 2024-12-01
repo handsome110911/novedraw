@@ -48,6 +48,16 @@
             text-align: center;
         }
 
+        h1 {
+            position: absolute;
+            top: 10%;
+            text-align: center;
+            width: 100%;
+            font-size: 2em;
+            font-weight: bold;
+            z-index: 1;
+        }
+
         /* 榜單樣式 */
         .leaderboard {
             position: absolute;
@@ -105,6 +115,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            margin-top: 50px;
         }
 
         input[type="text"] {
@@ -147,43 +158,6 @@
             opacity: 1;
         }
 
-        /* 特效：大獎 */
-        .special-winner {
-            color: pink;
-            animation: glowPink 1s infinite alternate;
-        }
-
-        @keyframes glowPink {
-            0% { text-shadow: 0 0 5px #ff80ff, 0 0 10px #ff40ff, 0 0 20px #ff00ff; }
-            100% { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff80ff, 0 0 30px #ff40ff; }
-        }
-
-        /* 特效：再來一次 */
-        .retry {
-            color: blue;
-            animation: glowBlue 1s infinite alternate;
-        }
-
-        @keyframes glowBlue {
-            0% { text-shadow: 0 0 5px #80d4ff, 0 0 10px #40aaff, 0 0 20px #007fff; }
-            100% { text-shadow: 0 0 10px #007fff, 0 0 20px #80d4ff, 0 0 30px #40aaff; }
-        }
-
-        /* 特效：BAN600 */
-        .ban600 {
-            color: yellow;
-            font-size: 2em;
-            border: 2px solid black;
-            padding: 5px 10px;
-            animation: glowYellow 1s infinite alternate;
-            border-radius: 5px;
-        }
-
-        @keyframes glowYellow {
-            0% { text-shadow: 0 0 5px #ffff80, 0 0 10px #ffff40, 0 0 20px #ffff00; }
-            100% { text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff80, 0 0 30px #ffff40; }
-        }
-
         /* 特效：最後一抽幸運特效 */
         .lucky {
             animation: luckyFlash 0.2s alternate;
@@ -199,6 +173,9 @@
     <!-- 背景層 -->
     <div class="background-image"></div>
     <div class="background-overlay"></div>
+
+    <!-- 標題 -->
+    <h1>諾芙新人畢業紀念周邊抽獎</h1>
 
     <!-- 榜單 -->
     <div class="leaderboard">
@@ -251,7 +228,7 @@
         }
 
         function drawPrize(times) {
-            const username = document.getElementById("username").value;
+            const username = document.getElementById("username").value.trim();
             if (!username) {
                 alert("請輸入您的名稱！");
                 return;
@@ -273,17 +250,6 @@
                 if (prize === "再來一次") {
                     retryCount++;
                     updateRetryCounter();
-                    resultElement.classList.add("retry");
-                }
-
-                if (prize.includes("大獎")) {
-                    leaderboard.push(`${username}: ${prize}`);
-                    updateLeaderboard();
-                    resultElement.classList.add("special-winner");
-                }
-
-                if (prize === "BAN600") {
-                    resultElement.classList.add("ban600");
                 }
 
                 if (index === results.length - 1 && prize === "哈哈 沒抽到" && Math.random() < 0.05) {

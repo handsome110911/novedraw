@@ -159,39 +159,6 @@
         .result.visible {
             opacity: 1;
         }
-
-        /* 特效：大獎 */
-        .special-winner {
-            animation: glowPink 1s infinite alternate;
-            color: #FF69B4; /* 粉色 */
-        }
-
-        @keyframes glowPink {
-            0% { text-shadow: 0 0 5px #FF80FF, 0 0 10px #FF40FF, 0 0 20px #FF00FF; }
-            100% { text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF80FF, 0 0 30px #FF40FF; }
-        }
-
-        /* 特效：再來一次 */
-        .retry {
-            animation: glowBlue 1s infinite alternate;
-            color: #1E90FF; /* 藍色 */
-        }
-
-        @keyframes glowBlue {
-            0% { text-shadow: 0 0 5px #80D4FF, 0 0 10px #40AAFF, 0 0 20px #007FFF; }
-            100% { text-shadow: 0 0 10px #007FFF, 0 0 20px #80D4FF, 0 0 30px #40AAFF; }
-        }
-
-        /* 特效：BAN600 */
-        .ban600 {
-            animation: glowYellow 1s infinite alternate;
-            color: yellow; /* 黃色 */
-        }
-
-        @keyframes glowYellow {
-            0% { text-shadow: 0 0 5px #FFFF80, 0 0 10px #FFFF40, 0 0 20px #FFFF00; }
-            100% { text-shadow: 0 0 10px #FFFF00, 0 0 20px #FFFF80, 0 0 30px #FFFF40; }
-        }
     </style>
 </head>
 <body>
@@ -269,11 +236,10 @@
                 resultElement.textContent = `${username} 的第 ${i + 1} 次抽獎結果：${prize}`;
 
                 if (prize.includes("大獎")) {
-                    resultElement.classList.add("special-winner");
+                    updateLeaderboard(username, prize);
                 } else if (prize === "再來一次") {
-                    resultElement.classList.add("retry");
-                } else if (prize === "BAN600") {
-                    resultElement.classList.add("ban600");
+                    retryCount++;
+                    updateRetryCounter();
                 }
 
                 setTimeout(() => resultElement.classList.add("visible"), i * 300);
@@ -281,18 +247,26 @@
             }
         }
 
-        function resetLeaderboard() {
-            leaderboard = [];
-            updateLeaderboard();
-        }
-
-        function copyLeaderboard() {
-            const text = leaderboard.join("\n");
-            navigator.clipboard.writeText(text).then(() => alert("榜單已複製！"));
+        function updateLeaderboard(name, prize) {
+            const leaderboardList = document.getElementById("leaderboardList");
+            const listItem = document.createElement("li");
+            listItem.textContent = `${name}: ${prize}`;
+            leaderboardList.appendChild(listItem);
         }
 
         function updateRetryCounter() {
             document.getElementById("retryCount").textContent = retryCount;
+        }
+
+        function resetLeaderboard() {
+            document.getElementById("leaderboardList").innerHTML = "";
+        }
+
+        function copyLeaderboard() {
+            const text = Array.from(document.getElementById("leaderboardList").children)
+                .map(item => item.textContent)
+                .join("\n");
+            navigator.clipboard.writeText(text).then(() => alert("榜單已複製！"));
         }
 
         function resetRetryCounter() {

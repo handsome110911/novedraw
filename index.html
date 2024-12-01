@@ -15,7 +15,7 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            background-color: #0A1128; /* 深藍背景 */
+            background-color: #0A1128;
         }
 
         .background-image {
@@ -39,26 +39,20 @@
             z-index: -1;
         }
 
-        /* 文字樣式 */
-        h1, h2, p, div.result {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 
-                -1px -1px 0 #000, 
-                 1px -1px 0 #000, 
-                -1px  1px 0 #000, 
-                 1px  1px 0 #000;
-        }
-
+        /* 標題文字 */
         h1 {
             position: absolute;
             top: 5%;
             text-align: center;
             width: 100%;
             font-size: 4rem;
-            z-index: 1;
+            font-weight: bold;
+            color: white;
+            text-shadow: 
+                -1px -1px 0 #000, 
+                 1px -1px 0 #000, 
+                -1px  1px 0 #000, 
+                 1px  1px 0 #000;
         }
 
         /* 榜單樣式 */
@@ -70,10 +64,6 @@
             padding: 15px;
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             text-align: center;
         }
 
@@ -85,16 +75,11 @@
             overflow-y: auto;
         }
 
-        .leaderboard ul li {
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-
         .leaderboard button {
             margin-top: 10px;
         }
 
-        /* 再來一次計數器樣式 */
+        /* 再來一次計數器 */
         .retry-counter {
             position: absolute;
             top: 20px;
@@ -103,20 +88,12 @@
             padding: 10px;
             background-color: rgba(255, 255, 255, 0.5);
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
-        .retry-counter h2 {
-            margin: 0 0 10px;
-            font-size: 1rem;
-        }
-
-        /* 重置按鈕樣式 */
         .retry-counter button {
             margin-top: 10px;
             padding: 5px 10px;
-            font-size: 0.9rem;
             background-color: #FF6347;
             color: white;
             border: none;
@@ -124,12 +101,11 @@
             cursor: pointer;
         }
 
-        /* 抽獎區域布局調整 */
+        /* 抽獎區域 */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
             margin-top: 50px;
         }
 
@@ -142,7 +118,6 @@
             text-align: center;
         }
 
-        /* 按鈕樣式 */
         button {
             padding: 10px 20px;
             font-size: 1rem;
@@ -151,51 +126,73 @@
             color: white;
             border: none;
             border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
             margin: 5px 0;
         }
 
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* 抽獎結果特效 */
+        /* 抽獎結果 */
         .result {
             margin-top: 10px;
             font-size: 1.5rem;
             opacity: 0;
-            transition: opacity 0.3s ease-in; /* 加速結果顯示 */
+            transition: opacity 0.5s ease-in;
         }
 
         .result.visible {
             opacity: 1;
         }
+
+        /* 特效：大獎 */
+        .special-winner {
+            animation: glowPink 1s infinite alternate;
+            color: #FF69B4;
+        }
+
+        @keyframes glowPink {
+            0% { text-shadow: 0 0 5px #FF80FF, 0 0 10px #FF40FF, 0 0 20px #FF00FF; }
+            100% { text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF80FF, 0 0 30px #FF40FF; }
+        }
+
+        /* 特效：再來一次 */
+        .retry {
+            animation: glowBlue 1s infinite alternate;
+            color: #1E90FF;
+        }
+
+        @keyframes glowBlue {
+            0% { text-shadow: 0 0 5px #80D4FF, 0 0 10px #40AAFF, 0 0 20px #007FFF; }
+            100% { text-shadow: 0 0 10px #007FFF, 0 0 20px #80D4FF, 0 0 30px #40AAFF; }
+        }
+
+        /* 特效：BAN600 */
+        .ban600 {
+            animation: glowYellow 1s infinite alternate;
+            color: yellow;
+        }
+
+        @keyframes glowYellow {
+            0% { text-shadow: 0 0 5px #FFFF80, 0 0 10px #FFFF40, 0 0 20px #FFFF00; }
+            100% { text-shadow: 0 0 10px #FFFF00, 0 0 20px #FFFF80, 0 0 30px #FFFF40; }
+        }
     </style>
 </head>
 <body>
-    <!-- 背景圖片 -->
     <div class="background-image"></div>
     <div class="background-overlay"></div>
 
-    <!-- 標題 -->
     <h1>諾芙新人畢業紀念周邊抽獎</h1>
 
-    <!-- 榜單 -->
     <div class="leaderboard">
         <h2>大獎榜單</h2>
         <ul id="leaderboardList"></ul>
         <button onclick="resetLeaderboard()">重置榜單</button>
     </div>
 
-    <!-- 再來一次計數器 -->
     <div class="retry-counter">
         <h2>再來一次計數器</h2>
         <p id="retryCount">0</p>
         <button onclick="resetRetryCounter()">清空計數</button>
     </div>
 
-    <!-- 抽獎區域 -->
     <div class="container">
         <input type="text" id="username" placeholder="請輸入您的名稱">
         <button onclick="drawPrize(1)">抽獎一次</button>
@@ -224,15 +221,19 @@
                     resultElement.textContent = `${username} 的第 ${i + 1} 次抽獎結果：${prize}`;
 
                     if (prize.includes("大獎")) {
+                        resultElement.classList.add("special-winner");
                         updateLeaderboard(username, prize);
                     } else if (prize === "再來一次") {
+                        resultElement.classList.add("retry");
                         retryCount++;
                         updateRetryCounter();
+                    } else if (prize === "BAN600") {
+                        resultElement.classList.add("ban600");
                     }
 
                     resultsContainer.appendChild(resultElement);
                     setTimeout(() => resultElement.classList.add("visible"), 100);
-                }, i * 300); // 每次延遲 300 毫秒
+                }, i * 300); // 每次延遲 300ms
             }
         }
 
@@ -270,8 +271,7 @@
         }
 
         function resetLeaderboard() {
-            const leaderboardList = document.getElementById("leaderboardList");
-            leaderboardList.innerHTML = "";
+            document.getElementById("leaderboardList").innerHTML = "";
         }
     </script>
 </body>

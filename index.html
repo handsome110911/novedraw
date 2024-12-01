@@ -39,25 +39,25 @@
             z-index: -1;
         }
 
-        /* 文字邊框樣式 */
+        /* 文字樣式 */
         h1, h2, p, div.result {
-            color: white; /* 文字填充色 */
+            color: white;
             font-size: 2.5rem;
             font-weight: bold;
             text-align: center;
             text-shadow: 
-                -1px -1px 0 #000, /* 左上陰影 */
-                 1px -1px 0 #000, /* 右上陰影 */
-                -1px  1px 0 #000, /* 左下陰影 */
-                 1px  1px 0 #000; /* 右下陰影 */
+                -1px -1px 0 #000, 
+                 1px -1px 0 #000, 
+                -1px  1px 0 #000, 
+                 1px  1px 0 #000;
         }
 
         h1 {
             position: absolute;
-            top: 5%; /* 向上移動 */
+            top: 5%;
             text-align: center;
             width: 100%;
-            font-size: 4rem; /* 放大標題字體 */
+            font-size: 4rem;
             z-index: 1;
         }
 
@@ -112,6 +112,18 @@
             font-size: 1rem;
         }
 
+        /* 重置按鈕樣式 */
+        .retry-counter button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         /* 抽獎區域布局調整 */
         .container {
             display: flex;
@@ -130,7 +142,7 @@
             text-align: center;
         }
 
-        /* 統一按鈕樣式 */
+        /* 按鈕樣式 */
         button {
             padding: 10px 20px;
             font-size: 1rem;
@@ -153,58 +165,37 @@
             margin-top: 10px;
             font-size: 1.5rem;
             opacity: 0;
-            transition: opacity 0.5s ease-in;
+            transition: opacity 0.3s ease-in; /* 加速結果顯示 */
         }
 
         .result.visible {
             opacity: 1;
         }
-
-        /* 特效：大獎 */
-        .special-winner {
-            animation: glowPink 1s infinite alternate;
-            color: #FF69B4; /* 粉色 */
-        }
-
-        @keyframes glowPink {
-            0% { text-shadow: 0 0 5px #FF80FF, 0 0 10px #FF40FF, 0 0 20px #FF00FF; }
-            100% { text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF80FF, 0 0 30px #FF40FF; }
-        }
-
-        /* 特效：再來一次 */
-        .retry {
-            animation: glowBlue 1s infinite alternate;
-            color: #1E90FF; /* 藍色 */
-        }
-
-        @keyframes glowBlue {
-            0% { text-shadow: 0 0 5px #80D4FF, 0 0 10px #40AAFF, 0 0 20px #007FFF; }
-            100% { text-shadow: 0 0 10px #007FFF, 0 0 20px #80D4FF, 0 0 30px #40AAFF; }
-        }
-
-        /* 特效：BAN600 */
-        .ban600 {
-            animation: glowYellow 1s infinite alternate;
-            color: yellow; /* 黃色 */
-        }
-
-        @keyframes glowYellow {
-            0% { text-shadow: 0 0 5px #FFFF80, 0 0 10px #FFFF40, 0 0 20px #FFFF00; }
-            100% { text-shadow: 0 0 10px #FFFF00, 0 0 20px #FFFF80, 0 0 30px #FFFF40; }
-        }
     </style>
 </head>
 <body>
+    <!-- 背景圖片 -->
+    <div class="background-image"></div>
+    <div class="background-overlay"></div>
+
+    <!-- 標題 -->
     <h1>諾芙新人畢業紀念周邊抽獎</h1>
+
+    <!-- 榜單 -->
     <div class="leaderboard">
         <h2>大獎榜單</h2>
         <ul id="leaderboardList"></ul>
         <button onclick="resetLeaderboard()">重置榜單</button>
     </div>
+
+    <!-- 再來一次計數器 -->
     <div class="retry-counter">
         <h2>再來一次計數器</h2>
         <p id="retryCount">0</p>
+        <button onclick="resetRetryCounter()">清空計數</button>
     </div>
+
+    <!-- 抽獎區域 -->
     <div class="container">
         <input type="text" id="username" placeholder="請輸入您的名稱">
         <button onclick="drawPrize(1)">抽獎一次</button>
@@ -225,34 +216,24 @@
             const resultsContainer = document.getElementById("resultsContainer");
             resultsContainer.innerHTML = "";
 
-            let index = 0;
+            for (let i = 0; i < times; i++) {
+                setTimeout(() => {
+                    const prize = getPrize();
+                    const resultElement = document.createElement("div");
+                    resultElement.className = "result";
+                    resultElement.textContent = `${username} 的第 ${i + 1} 次抽獎結果：${prize}`;
 
-            const interval = setInterval(() => {
-                if (index >= times) {
-                    clearInterval(interval);
-                    return;
-                }
+                    if (prize.includes("大獎")) {
+                        updateLeaderboard(username, prize);
+                    } else if (prize === "再來一次") {
+                        retryCount++;
+                        updateRetryCounter();
+                    }
 
-                const prize = getPrize();
-                const resultElement = document.createElement("div");
-                resultElement.className = "result";
-                resultElement.textContent = `${username} 的第 ${index + 1} 次抽獎結果：${prize}`;
-
-                if (prize.includes("大獎")) {
-                    resultElement.classList.add("special-winner");
-                    updateLeaderboard(username, prize);
-                } else if (prize === "再來一次") {
-                    resultElement.classList.add("retry");
-                    retryCount++;
-                    updateRetryCounter();
-                } else if (prize === "BAN600") {
-                    resultElement.classList.add("ban600");
-                }
-
-                resultsContainer.appendChild(resultElement);
-                setTimeout(() => resultElement.classList.add("visible"), 100);
-                index++;
-            }, 500);
+                    resultsContainer.appendChild(resultElement);
+                    setTimeout(() => resultElement.classList.add("visible"), 100);
+                }, i * 300); // 每次延遲 300 毫秒
+            }
         }
 
         function getPrize() {
@@ -260,8 +241,7 @@
                 { name: "大獎 - 立牌（雙馬尾）", chance: 1 },
                 { name: "大獎 - 立牌（長髮）", chance: 1 },
                 { name: "再來一次", chance: 10 },
-                { name: "BAN600", chance: 5 },
-                { name: "哈哈 沒抽到", chance: 83 }
+                { name: "哈哈 沒抽到", chance: 88 },
             ];
 
             const rand = Math.random() * 100;
@@ -282,6 +262,11 @@
 
         function updateRetryCounter() {
             document.getElementById("retryCount").textContent = retryCount;
+        }
+
+        function resetRetryCounter() {
+            retryCount = 0;
+            updateRetryCounter();
         }
 
         function resetLeaderboard() {

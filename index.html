@@ -133,6 +133,12 @@
         .result {
             margin-top: 10px;
             font-size: 1.5rem;
+            color: white;
+            text-shadow: 
+                -1px -1px 0 #000, 
+                 1px -1px 0 #000, 
+                -1px  1px 0 #000, 
+                 1px  1px 0 #000;
             opacity: 0;
             transition: opacity 0.5s ease-in;
         }
@@ -143,8 +149,8 @@
 
         /* 特效：大獎 */
         .special-winner {
-            animation: glowPink 1s infinite alternate;
             color: #FF69B4;
+            animation: glowPink 1s infinite alternate;
         }
 
         @keyframes glowPink {
@@ -154,8 +160,8 @@
 
         /* 特效：再來一次 */
         .retry {
-            animation: glowBlue 1s infinite alternate;
             color: #1E90FF;
+            animation: glowBlue 1s infinite alternate;
         }
 
         @keyframes glowBlue {
@@ -165,8 +171,8 @@
 
         /* 特效：BAN600 */
         .ban600 {
-            animation: glowYellow 1s infinite alternate;
             color: yellow;
+            animation: glowYellow 1s infinite alternate;
         }
 
         @keyframes glowYellow {

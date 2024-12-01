@@ -39,26 +39,17 @@
             z-index: -1;
         }
 
-        /* 文字細框樣式 */
+        /* 文字邊框樣式 */
         h1, h2, p, div.result {
-            color: white;
+            color: white; /* 文字填充色 */
             font-size: 2rem;
             font-weight: bold;
             text-align: center;
-            position: relative;
-            display: inline-block;
-        }
-
-        h1::before, h2::before, p::before, div.result::before {
-            content: '';
-            position: absolute;
-            top: -5px; /* 調整框距 */
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border: 2px solid black; /* 黑色細框 */
-            border-radius: 5px;
-            z-index: -1;
+            text-shadow: 
+                -1px -1px 0 #000, /* 左上陰影 */
+                 1px -1px 0 #000, /* 右上陰影 */
+                -1px  1px 0 #000, /* 左下陰影 */
+                 1px  1px 0 #000; /* 右下陰影 */
         }
 
         h1 {

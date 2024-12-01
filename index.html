@@ -141,6 +141,10 @@
                  1px  1px 0 #000;
             opacity: 0;
             transition: opacity 0.5s ease-in;
+            text-align: center; /* 將文字置中對齊 */
+            display: flex;
+            justify-content: center; /* 水平置中 */
+            align-items: center; /* 垂直置中 */
         }
 
         .result.visible {
@@ -239,7 +243,7 @@
 
                     resultsContainer.appendChild(resultElement);
                     setTimeout(() => resultElement.classList.add("visible"), 100);
-                }, i * 300); // 每次延遲 300ms
+                }, i * 300);
             }
         }
 
